@@ -7,7 +7,7 @@
 
 var socket = new WebSocket('ws://localhost:8080/websocket');	//creates new web socket socket
 var socketPromises = {}; //key request id, value: promise
-// var requestID = 0;	
+var requestID = 0;	
 
 //websocket socket open
 socket.onopen = function(evt) {
@@ -27,29 +27,29 @@ socket.onerror = function(evt) {
 //client sends message to server
 var send = function(channel, data, callback) {
     if (socket.readyState === 1) {
-        //requestID is assigned current time value
+        //Request ID is assigned current time value
         var requestID = new Date().getTime();
-        //TODO: instantiate a promise
-        //construct message to send
+        //Construct message to send
         var message = '{"channel":"' + channel + '", "data":' + data + ',"requestId":"' + requestID + '"}';
-        //TODO: Hash the requestID with an associated promise
-        socketPromises[requestID] = callback;	
+        //Hash callback function with its corresponding requestID
+        socketPromises[requestID] = callback;
+        //Send message
         socket.send(message);
-        requestID++;
     } else {
+        //Open new websocket if one is not detected
         socket = new WebSocket('ws://localhost:8080/websocket');
     }
 };
 
-//client receives data from the server
+//Client receives data from the server
 socket.onmesssage = function(evt) {
-    //parse message into JSON
+    //Parse message into JSON
     var dataJSON = $.parseJSON(evt.data);
-    //ignore say messages which have no requestId
+    //Ignore say messages which have no requestId
     var channel = dataJSON["channel"];
     var requestId = dataJSON["requestId"];
     if (requestId !== null) {
-        //if callback function exists, run it
+        //If callback function exists, run it
         var callback = socketPromises[requestId];
         if (callback !== undefined) {
             callback(dataJSON["data"]);
