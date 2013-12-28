@@ -1,5 +1,7 @@
-//import q library hosted at cdnjs
+// Pull q library hosted at cdnjs
 <script src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>
+// Pull Socket.IO from cdn
+<script src="http://cdn.socket.io/stable/socket.io.js"></script>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 								 Websocket socket and event handlers								 //
