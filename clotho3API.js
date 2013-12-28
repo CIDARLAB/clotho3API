@@ -7,6 +7,8 @@
 // 								 Websocket socket and event handlers								 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// var socket = io.connect('http://localhost:8080');
+
 var socket = new WebSocket('ws://localhost:8080/websocket');	//creates new web socket socket
 var socketPromises = {}; //key request id, value: promise
 var requestID = 0;	
