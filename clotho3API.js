@@ -12,7 +12,7 @@ var Q = require('q');
 
 // Creates new web socket socket
 var socket = new WebSocket('ws://localhost:8080/websocket');
-// Key: request id, Value: callback function
+// Callback function hash table --> Key: request id, Value: callback function
 var callbackHash = {};
 var requestID = 0;	
 
