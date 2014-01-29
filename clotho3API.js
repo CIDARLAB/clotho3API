@@ -31,13 +31,15 @@ socket.onerror = function(evt) {
 	alert("Socket error. Is Clotho running?");
 };
 
-// Client sends message to server
+// Helper function: Client sends message to server
 var send = function(channel, data, callback) {
     if (socket.readyState !== 1) {
     	// Open new websocket if one is not detected
         socket = new WebSocket('ws://localhost:8080/websocket');
     }
-    // Request ID is assigned current time value
+    // Create promise object
+    var deferred = Q.defer();
+    // New Request ID is assigned current time value
     var requestID = new Date().getTime();
     // Construct message to send
     var message = '{"channel":"' + channel + '", "data":' + data + ',"requestId":"' + requestID + '"}';
@@ -45,20 +47,8 @@ var send = function(channel, data, callback) {
     callbackHash[requestID] = callback;
     // Send message
     socket.send(message);
-
-    // if (socket.readyState === 1) {
-    //     // Request ID is assigned current time value
-    //     var requestID = new Date().getTime();
-    //     // Construct message to send
-    //     var message = '{"channel":"' + channel + '", "data":' + data + ',"requestId":"' + requestID + '"}';
-    //     // Hash callback function with its corresponding requestID
-    //     callbackHash[requestID] = callback;
-    //     // Send message
-    //     socket.send(message);
-    // } else {
-    //     // Open new websocket if one is not detected
-    //     socket = new WebSocket('ws://localhost:8080/websocket');
-    // }
+    // Return promise
+    return deferred.promise;
 };
 
 // Client receives data from the server
@@ -78,6 +68,7 @@ socket.onmesssage = function(evt) {
     }
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 												 Methods											     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,8 +80,8 @@ socket.onmesssage = function(evt) {
 * @return {Object} A list of created objects
 */
 var create = function(objects) {
-	send('create', objects, createCallback);
-	return createdObjects;
+	// DO I WANT A CALLBACK INPUT FOR THIS (AND ALL) METHODS?
+    return send('create', objects);
 }
 
 /**
