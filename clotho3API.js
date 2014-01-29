@@ -37,7 +37,7 @@ var send = function(channel, data, callback) {
     	// Open new websocket if one is not detected
         socket = new WebSocket('ws://localhost:8080/websocket');
     }
-    // Create promise object
+    // Create 'deferred' object
     var deferred = Q.defer();
     // New Request ID is assigned current time value
     var requestID = new Date().getTime();
