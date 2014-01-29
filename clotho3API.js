@@ -32,7 +32,7 @@ socket.onerror = function(evt) {
 };
 
 // Helper function: Client sends message to server
-var send = function(channel, data, callback) {
+var send = function(channel, data) {
     if (socket.readyState !== 1) {
     	// Open new websocket if one is not detected
         socket = new WebSocket('ws://localhost:8080/websocket');
@@ -44,7 +44,9 @@ var send = function(channel, data, callback) {
     // Construct message to send
     var message = '{"channel":"' + channel + '", "data":' + data + ',"requestId":"' + requestID + '"}';
     // Hash callback function with its corresponding requestID
-    callbackHash[requestID] = callback;
+    callbackHash[requestID] = function(d) {
+        deferred.resolve(d);
+    };
     // Send message
     socket.send(message);
     // Return promise
@@ -53,8 +55,8 @@ var send = function(channel, data, callback) {
 
 // Client receives data from the server
 socket.onmesssage = function(evt) {
-    // Parse message into JSON
-    var dataJSON = $.parseJSON(evt.data);
+    // Parse message into JSON  
+    var dataJSON = JSON.parse(evt.data);
     // Ignore say messages which have no requestId
     var channel = dataJSON["channel"];
     var requestId = dataJSON["requestId"];
