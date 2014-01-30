@@ -44,8 +44,8 @@ var send = function(channel, data) {
     // Construct message to send
     var message = '{"channel":"' + channel + '", "data":' + data + ',"requestId":"' + requestID + '"}';
     // Hash callback function with its corresponding requestID
-    callbackHash[requestID] = function(d) {
-        deferred.resolve(d);
+    callbackHash[requestID] = function(serverData) {
+        deferred.resolve(serverData);
     };
     // Send message
     socket.send(message);
