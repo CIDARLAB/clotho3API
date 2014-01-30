@@ -1,10 +1,6 @@
-// TODO: How to ensure these libraries below are used? Cannot import js libs in other js files.
-// Pull q library hosted at cdnjs
-//<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>
-// Pull Socket.IO from cdn
-//<script type="text/javascript" src="http://cdn.socket.io/stable/socket.io.js"></script>
 
-var Q = require('q');
+// Add script tag to html for Q Promise library hosted at cdnjs
+//<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 								 Websocket socket and event handlers								 //
@@ -37,7 +33,7 @@ var send = function(channel, data) {
     	// Open new websocket if one is not detected
         socket = new WebSocket('ws://localhost:8080/websocket');
     }
-    // Create 'deferred' object
+    // Create 'deferred' object ... Q is a global variable created simply by adding the Q library script tag
     var deferred = Q.defer();
     // New Request ID is assigned current time value
     var requestID = new Date().getTime();
@@ -62,7 +58,7 @@ socket.onmesssage = function(evt) {
     var requestId = dataJSON["requestId"];
     if (requestId !== null) {
         // If callback function exists, run it
-        var callback = callbackHash[requestId];	
+        var callback = callbackHash[requestId];
         if (callback !== undefined) {
             callback(dataJSON["data"]);
             delete callbackHash[requestId];
@@ -82,7 +78,6 @@ socket.onmesssage = function(evt) {
 * @return {Object} A list of created objects
 */
 var create = function(objects) {
-	// DO I WANT A CALLBACK INPUT FOR THIS (AND ALL) METHODS?
     return send('create', objects);
 }
 
