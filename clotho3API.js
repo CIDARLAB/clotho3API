@@ -1,14 +1,19 @@
 // Add script tag to html for Q Promise library hosted at cdnjs and JQuery library
 //<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>
 
-//Encapsulate all code in this immediately-invoked function expression (aka: self-executing anonymous function)
+//Encapsulate all code in this immediately-invoked function expression (aka: self-evoking anonymous function).
+//Maintains scope and state for entirety of the library's execution.
 (function() {
 
     var Clotho = function() {
         //Clotho Constructor
     };
 
-    Clotho.prototype = {    //Clotho functions
+    // Callback function hash table --> Key: request id, Value: callback function
+    var callbackHash = {};
+    // var requestID = 0;
+
+    Clotho.prototype = { //Clotho function prototypes
         /**
          * Clotho.create
          * Creates specified object(s) and associated UUIDs in the order they are found in the list (if more than one).
@@ -79,64 +84,59 @@
     };
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                   Websocket socket and event handlers                                 //
+    //                                              WebSocket                                                //
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Creates new web socket socket
-    var socket = new WebSocket('ws://localhost:8443/websocket');
-    // Callback function hash table --> Key: request id, Value: callback function
-    var callbackHash = {};
-    var requestID = 0;
-    // Websocket socket open
-    socket.onopen = function(evt) {
-        // TODO: Authenticate websocket socket
-    };
-    //websocket socket closed
-    socket.onclose = function(evt) {
-        alert("Closing websocket socket");
-    };
-    //websocket error occurs
-    socket.onerror = function(evt) {
-        alert("Socket error. Is Clotho running?");
-    };
-
-    // Helper function: Client sends message to server
-    var send = function(channel, data) {
-        if (socket.readyState !== 1) {
-            // Open new websocket if one is not detected
-            socket = new WebSocket('ws://localhost:8443/websocket');
-        }
-        // Create 'deferred' object ... Q is a global variable created simply by adding the Q library script tag
-        var deferred = Q.defer();
-        // New Request ID is assigned current time value
-        var requestID = new Date().getTime();
-        // Construct message to send
-        var message = '{"channel":"' + channel + '", "data":"' + data + '","requestId":"' + requestID + '"}';
-        // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
-        callbackHash[channel + requestID] = function(serverData) {
-            deferred.resolve(serverData);
+    var newSocket = function() {
+        
+        socket = new WebSocket('ws://localhost:8443/websocket');
+        
+        socket.onopen = function(evt) {
+            //TODO: authenticate Websocket 
         };
-        // Send message
-        socket.send(message);
-        // Return promise
-        return deferred.promise;
-    };
-
-    // Client receives data from the server
-    socket.onmessage = function(evt) {
-        // Parse message into JSON  
-        var dataJSON = JSON.parse(evt.data);
-        var channel = dataJSON.channel;
-        var requestId = dataJSON.requestId;
-        if (requestId !== null) {
-            // If callback function exists, run it
-            var callback = callbackHash[channel + requestId];
-            if (callback !== undefined) {
-                callback(dataJSON.data);
-                delete callbackHash[channel + requestId];
+        socket.onclose = function(evt) {
+            //alert("Closing websocket");
+        };
+        socket.onerror = function(evt) {
+            //alert("Socket error. Is Clotho running?");
+        };
+        socket.onmessage = function(evt) {
+            // Parse message into JSON  
+            var dataJSON = JSON.parse(evt.data);
+            var channel = dataJSON.channel;
+            var requestId = dataJSON.requestId;
+            if (requestId !== null) {
+                // If callback function exists, run it
+                var callback = callbackHash[channel + requestId];
+                if (callback !== undefined) {
+                    callback(dataJSON.data);
+                    delete callbackHash[channel + requestId];
+                }
             }
-        }
+        };
+        // Helper function: Sends message to server 
+        socket.emit = function(channel, data) {
+            if (socket.readyState !== 1) {
+                // Open new websocket if one is not detected
+                socket = new WebSocket('ws://localhost:8443/websocket');
+            }
+            // Create 'deferred' object ... Q is a global variable
+            var deferred = Q.defer();
+            var requestID = new Date().getTime();   
+            var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
+            // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
+            callbackHash[channel + requestID] = function(serverData) {
+                deferred.resolve(serverData);
+            };
+            // Send message
+            socket.send(message);
+            // Return promise
+            return deferred.promise;
+        };
+
+        return socket;
     };
 
+    return Clotho;
 
 })();
