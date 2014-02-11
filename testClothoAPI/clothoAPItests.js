@@ -1,4 +1,3 @@
-        
 module("Server API Tests");
 
 ////////////////////////////////////////////////////////
@@ -7,7 +6,7 @@ module("Server API Tests");
 // var socket = new WebSocket('wss://localhost:8443/websocket');
 // Callback function hash table --> Key: request id, Value: callback function
 // var callbackHash = {};
-var requestID = 0;  
+// var requestID = 0;  
 
 // // Websocket socket open
 // socket.onopen = function(evt) {
@@ -21,10 +20,9 @@ var requestID = 0;
 // socket.onerror = function(evt) {
 //     alert("Socket error. Is Clotho running?");
 // };
-
+var callbackHash = {};
 var getSocket = function(addr) {
     socket = new WebSocket(addr);
-    var callbackHash = {};
 
     socket.oldsend = socket.send;
 
@@ -70,11 +68,15 @@ var getSocket = function(addr) {
 
 var clothosocket = "wss://localhost:8443/websocket";
 
+LIBRARY JS
+//////////////////////////////////////////////////////////////////////////////////////////////
+CLIENT JS
+
 asyncTest("get", function() {
     var socket = getSocket(clothosocket);
-    socket.onopen = function () {
-        socket.send("get", "Test Part 1", function (data) {
-                equal(data.name, "Test Part 1");
+    socket.onopen = function() {
+        socket.send("get", "Test Part 1", function(data) {
+            equal(data.name, "Test Part 1");
             start();
         });
     };
