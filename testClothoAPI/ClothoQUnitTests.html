@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Clotho Test Page</title>
+        <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.12.0.css">
+        <script src="http://code.jquery.com/qunit/qunit-1.12.0.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" src="../clotho3API.js"></script>
+    </head>
+    <body>
+        <script>
+            $(document).ready(function() { 
+                module("Server API Tests");
+                asyncTest("GET", function() {
+                    Clotho.get("Test Part 1", function(data) {
+                        equal(data.name, "Test Part 1");
+                        start();
+                    });
+                });
+            });
+        </script>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+    </body>
+</html>
