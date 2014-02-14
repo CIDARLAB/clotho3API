@@ -3,17 +3,13 @@
 
 //Encapsulate all code in this immediately-invoked function expression (aka: self-evoking anonymous function).
 //Maintains scope and state for entirety of the library's execution.
-(function() {
-
-    var Clotho = function() {
-        //Clotho Constructor
-    };
+(function(Clotho) {
 
     // Callback function hash table --> Key: request id, Value: callback function
     var callbackHash = {};
-    // var requestID = 0;
+    var socket;
 
-    Clotho.prototype = { //Clotho function prototypes
+    window.Clotho = Clotho.prototype = { //Clotho function prototypes
         /**
          * Clotho.create
          * Creates specified object(s) and associated UUIDs in the order they are found in the list (if more than one).
@@ -49,8 +45,11 @@
          * @param {Object} JSON object selector(s) describing an instance(s) of Clotho schema.
          * @return {Object} Object description for every input object requested.
          */
-        get: function(objectSelectors) {
-            return objects;
+        get: function(name, callback) {
+            socket = new newSocket();
+            socket.onopen = function() {
+                socket.emit("get", name, callback);
+            }
         },
 
         /**
@@ -89,17 +88,8 @@
 
     var newSocket = function() {
         
-        socket = new WebSocket('ws://localhost:8443/websocket');
+        socket = new WebSocket("wss://localhost:8443/websocket");
         
-        socket.onopen = function(evt) {
-            //TODO: authenticate Websocket 
-        };
-        socket.onclose = function(evt) {
-            //alert("Closing websocket");
-        };
-        socket.onerror = function(evt) {
-            //alert("Socket error. Is Clotho running?");
-        };
         socket.onmessage = function(evt) {
             // Parse message into JSON  
             var dataJSON = JSON.parse(evt.data);
@@ -114,29 +104,26 @@
                 }
             }
         };
+        
         // Helper function: Sends message to server 
-        socket.emit = function(channel, data) {
-            if (socket.readyState !== 1) {
-                // Open new websocket if one is not detected
-                socket = new WebSocket('ws://localhost:8443/websocket');
+        socket.emit = function(channel, data, callback) {
+            if (socket.readyState != 1) {
+                alert("Not ready");
+                // socket = new WebSocket('ws://localhost:8443/websocket');
             }
             // Create 'deferred' object ... Q is a global variable
-            var deferred = Q.defer();
-            var requestID = new Date().getTime();   
+            // var deferred = Q.defer();
+            var requestID = new Date().getTime();
             var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
             // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
-            callbackHash[channel + requestID] = function(serverData) {
-                deferred.resolve(serverData);
-            };
-            // Send message
+            callbackHash[channel + requestID] = callback;
+            // function(serverData) {
+            //     // deferred.resolve(serverData);
+            // };
             socket.send(message);
             // Return promise
-            return deferred.promise;
+            // return deferred.promise;
         };
-
         return socket;
     };
-
-    return Clotho;
-
-})();
+}(Clotho = window.Clotho || {}));
