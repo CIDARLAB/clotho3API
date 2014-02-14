@@ -121,7 +121,6 @@
             //     // deferred.resolve(serverData);
             // };
             socket.send(message);
-            // Return promise
             // return deferred.promise;
         };
         return socket;
