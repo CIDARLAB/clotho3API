@@ -5,11 +5,58 @@
 //Maintains scope and state for entirety of the library's execution.
 (function(Clotho) {
 
-    // Callback function hash table --> Key: request id, Value: callback function
-    var callbackHash = {};
-    var socket;
+    var callbackHash = {}; //Callback function hash table --> Key: request id, Value: callback function
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                              WebSocket                                                //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    socket = new WebSocket("wss://localhost:8443/websocket");
+
+    socket.onopen = function() {
+        //do nothing
+    };
+
+    socket.onmessage = function(evt) {
+        // Parse message into JSON  
+        var dataJSON = JSON.parse(evt.data);
+        var channel = dataJSON.channel;
+        var requestId = dataJSON.requestId;
+        if (requestId !== null) {
+            // If callback function exists, run it
+            var callback = callbackHash[channel + requestId];
+            if (callback !== undefined) {
+                callback(dataJSON.data);
+                delete callbackHash[channel + requestId];
+            }
+        }
+    };
+
+    // Helper function: Sends message to server 
+    socket.emit = function(channel, data, callback) {
+        // window.setTimeout(function(){alert("timeout")},500);
+        // if (socket.readyState != 1) {
+        //     alert("Not ready");
+        // }
+        // Create 'deferred' object ... Q is a global variable
+        // var deferred = Q.defer();
+        var requestID = new Date().getTime();
+        var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
+        // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
+        callbackHash[channel + requestID] = callback;
+        // function(serverData) {
+        //     // deferred.resolve(serverData);
+        // };
+        socket.send(message);
+        // return deferred.promise;
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                          Clotho Object                                                //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     window.Clotho = Clotho.prototype = { //Clotho function prototypes
+
         /**
          * Clotho.create
          * Creates specified object(s) and associated UUIDs in the order they are found in the list (if more than one).
@@ -45,11 +92,9 @@
          * @param {Object} JSON object selector(s) describing an instance(s) of Clotho schema.
          * @return {Object} Object description for every input object requested.
          */
+
         get: function(name, callback) {
-            socket = new newSocket();
-            socket.onopen = function() {
-                socket.emit("get", name, callback);
-            }
+            socket.emit("get", name, callback);
         },
 
         /**
@@ -80,49 +125,5 @@
         run: function(myFunction, args) {
             return object;
         }
-    };
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                              WebSocket                                                //
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    var newSocket = function() {
-        
-        socket = new WebSocket("wss://localhost:8443/websocket");
-        
-        socket.onmessage = function(evt) {
-            // Parse message into JSON  
-            var dataJSON = JSON.parse(evt.data);
-            var channel = dataJSON.channel;
-            var requestId = dataJSON.requestId;
-            if (requestId !== null) {
-                // If callback function exists, run it
-                var callback = callbackHash[channel + requestId];
-                if (callback !== undefined) {
-                    callback(dataJSON.data);
-                    delete callbackHash[channel + requestId];
-                }
-            }
-        };
-        
-        // Helper function: Sends message to server 
-        socket.emit = function(channel, data, callback) {
-            if (socket.readyState != 1) {
-                alert("Not ready");
-                // socket = new WebSocket('ws://localhost:8443/websocket');
-            }
-            // Create 'deferred' object ... Q is a global variable
-            // var deferred = Q.defer();
-            var requestID = new Date().getTime();
-            var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
-            // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
-            callbackHash[channel + requestID] = callback;
-            // function(serverData) {
-            //     // deferred.resolve(serverData);
-            // };
-            socket.send(message);
-            // return deferred.promise;
-        };
-        return socket;
     };
 }(Clotho = window.Clotho || {}));
