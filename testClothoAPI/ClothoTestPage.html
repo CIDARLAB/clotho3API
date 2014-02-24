@@ -7,6 +7,7 @@
         <script type="text/javascript" src="../clotho3API.js"></script>
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/q.js/1.0.0/q.js"></script>
     </head>
     <body>
         <button id="connect" type="button" class="btn btn-primary btn-lg">Connect</button>
@@ -17,9 +18,9 @@
                     alert("Connecting");
                 });
                 $("#get").click(function() {
-                    Clotho.get("Test Part 1", function(data) {
+                    Clotho.get("Test Part 1").then(function() {
                         alert(data.name);
-                    });
+                    }).done();
                 });
             });
         </script>
