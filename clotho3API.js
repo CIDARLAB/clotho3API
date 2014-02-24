@@ -33,22 +33,18 @@
     };
 
     // Helper function: Sends message to server 
-    socket.emit = function(channel, data, callback) {
-        // window.setTimeout(function(){alert("timeout")},500);
-        // if (socket.readyState != 1) {
-        //     alert("Not ready");
-        // }
+    socket.emit = function(channel, data) {
         // Create 'deferred' object ... Q is a global variable
-        // var deferred = Q.defer();
+        var deferred = Q.defer();
         var requestID = new Date().getTime();
         var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
+        var callback = function(dataFromServer) {
+            deferred.resolve(dataFromServer);
+        };
         // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
         callbackHash[channel + requestID] = callback;
-        // function(serverData) {
-        //     // deferred.resolve(serverData);
-        // };
         socket.send(message);
-        // return deferred.promise;
+        return deferred.promise;
     };
 
 
@@ -64,7 +60,7 @@
          * @return {Object} A list of created objects
          */
         create: function(objects) {
-            return send('create', objects);
+            return send("create", objects);
         },
 
         /**
@@ -93,8 +89,8 @@
          * @return {Object} Object description for every input object requested.
          */
 
-        get: function(name, callback) {
-            socket.emit("get", name, callback);
+        get: function(name) {
+            return socket.emit("get", name);
         },
 
         /**
