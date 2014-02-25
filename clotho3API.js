@@ -14,7 +14,11 @@
     socket = new WebSocket("wss://localhost:8443/websocket");
 
     socket.onopen = function() {
-        //do nothing
+        //TODO: Remember JS is single-threaded so the WebSocket will not reach readystate=1 until 
+        ///the entire library finishes loading. In the off chance the user writes a script that calls
+        ///a Clotho function immediately upon completion of dependencies loading, the socket will not 
+        ///have had enough time to enter readystate. Handle this by storing those calls (if any are made)
+        ///and executing them in this socket.onopen() method.
     };
 
     socket.onmessage = function(evt) {
@@ -32,18 +36,25 @@
         }
     };
 
+    var Message = function(channel, data, requestID) {
+        this.channel = channel;
+        this.data = data;
+        this.requestId = requestID;
+    };
+
     // Helper function: Sends message to server 
     socket.emit = function(channel, data) {
         // Create 'deferred' object ... Q is a global variable
         var deferred = Q.defer();
         var requestID = new Date().getTime();
-        var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
+        // var message = '{"channel":"' + channel + '","data":"' + data + '","requestId":"' + requestID + '"}';
+        var message = new Message(channel, data, requestID);
         var callback = function(dataFromServer) {
             deferred.resolve(dataFromServer);
         };
         // Hash callback function: (channel + requestID) because we need to distinguish between "say" messages and desired responses from server. 
         callbackHash[channel + requestID] = callback;
-        socket.send(message);
+        socket.send(JSON.stringify(message));
         return deferred.promise;
     };
 
@@ -99,8 +110,8 @@
          * @param {Object} Clotho object specification.
          * @return {Object} All objects that match the spec.
          */
-        query: function(objectSpec) {
-            return objects;
+        query: function(name) {
+            return socket.emit("query", name);
         },
 
         /**
