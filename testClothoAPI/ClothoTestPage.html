@@ -12,14 +12,21 @@
     <body>
         <button id="connect" type="button" class="btn btn-primary btn-lg">Connect</button>
         <button id="get" type="button" class="btn btn-success btn-lg">Get</button>
+        <button id="query" type="button" class="btn btn-success btn-lg">Query</button>
+
         <script>
             $(document).ready(function() { 
                 $("#connect").click(function() {
                     alert("Connecting");
                 });
                 $("#get").click(function() {
-                    Clotho.get("Test Part 1").then(function() {
+                    Clotho.get("Test Part 1").then(function(data) {
                         alert(data.name);
+                    }).done();
+                });
+                $("#query").click(function() {
+                    Clotho.query({"schema":"Part"}).then(function(data) {
+                        alert(data.length);
                     }).done();
                 });
             });
