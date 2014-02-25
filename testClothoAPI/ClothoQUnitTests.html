@@ -20,6 +20,12 @@
                         start();
                     }).done();
                 });
+                asyncTest("QUERY", function() {
+                    Clotho.query("schema", "Part").then(function(data) {
+                        equal(data.length, 55);
+                        start();
+                    }).done();
+                });
             });
         </script>
         <div id="qunit"></div>

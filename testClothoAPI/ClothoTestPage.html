@@ -25,7 +25,7 @@
                     }).done();
                 });
                 $("#query").click(function() {
-                    Clotho.query({"schema":"Part"}).then(function(data) {
+                    Clotho.query("schema", "Part").then(function(data) {
                         alert(data.length);
                     }).done();
                 });

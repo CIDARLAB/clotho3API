@@ -110,8 +110,10 @@
          * @param {Object} Clotho object specification.
          * @return {Object} All objects that match the spec.
          */
-        query: function(name) {
-            return socket.emit("query", name);
+        query: function(spec, name) {
+            var obj = {};
+            obj[spec] = name;
+            return socket.emit("query", obj);
         },
 
         /**
