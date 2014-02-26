@@ -21,11 +21,11 @@
                 });
                 $("#get").click(function() {
                     Clotho.get("Test Part 1").then(function(data) {
-                        alert(data.name);
+                        alert(data.author);
                     }).done();
                 });
                 $("#query").click(function() {
-                    Clotho.query("schema", "Part").then(function(data) {
+                    Clotho.query("schema", "CompositePart").then(function(data) {
                         alert(data.length);
                     }).done();
                 });
