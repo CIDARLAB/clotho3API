@@ -68,10 +68,21 @@
          * Clotho.create
          * Creates specified object(s) and associated UUIDs in the order they are found in the list (if more than one).
          * @param {Object} A list of one or more JSON objects describing an instance(s) of Clotho schema.
-         * @return {Object} A list of created objects
+         * @return {Object} A list of created objects' IDs. Ex: Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"},{"name":"My Second Part", "sequence":"AAACCC"}])
          */
-        create: function(objects) {
-            return send("create", objects);
+        create: function(object) {
+            /** Three cases below (in order):
+             *  Input param is a JSON object. Ex: Clotho.create({"name":"My New Part", "sequence":"GGGGGG"})
+             *  Input param is an object containing a single JSON. Ex: Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"}])
+             *  Input param is an object containing multiple JSONs. Ex: 
+             */
+            if (object.length == undefined) {
+                return socket.emit("create", object);
+            } else if (object.length == 1) {
+                return socket.emit("create", object[0]);
+            } else {
+                return socket.emit("createAll", object);
+            }
         },
 
         /**
@@ -79,21 +90,26 @@
          * Destroys object(s) as defined by the input.
          * @param {Object} One or more JSON object(s) describing an instance(s) of Clotho schema.
          */
-        destroy: function(objects) {
-            //nothing to return
+        destroy: function(name) {
+            if (typeof name == "string") {
+                socket.emit("destroy", name);
+            } else if (name.length >= 1) {
+                socket.emit("destroyAll", name);
+            }
+            //no return
         },
 
         /**
          * Clotho.set
          * Sets the fields present in the specificiation to the values defined by the spec.
-         * @param {Object} A JSON object specification with the ID field(s) of the Clotho object instance to be altered.
+         * @param id: ID of the object to be updated, key: field
          * @return {Object} An ID or list of IDs of objects updated.
          */
-        set: function(objectSpecs) {
-            return objectIDs;
+        set: function(object) {
+            return socket.emit("set", object);
         },
 
-        /**
+        /** 
          * Clotho.get
          * Gets object(s) as defined by the input parameter(s).
          * @param {Object} JSON object selector(s) describing an instance(s) of Clotho schema.
@@ -101,7 +117,14 @@
          */
 
         get: function(name) {
-            return socket.emit("get", name);
+            if (typeof name == "string") {
+                return socket.emit("get", name);
+            } else if (name.length >= 1) {
+                return socket.emit("getAll", name);
+            } else {
+                //Nothing to work with
+            }
+            
         },
 
         /**
