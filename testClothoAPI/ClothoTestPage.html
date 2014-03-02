@@ -34,7 +34,8 @@
                     }).done();
                 });
                 $("#create").click(function() {
-                    Clotho.create({"name":"My New Part", "sequence":"GGGGGG"}).then(function(id) {
+                    obj = {"name":"My New Part", "sequence":"GGGGGG"};
+                    Clotho.create(obj).then(function(id) {
                         Clotho.get(id).then(function(data) {
                             alert(data.sequence);
                         }).done();
