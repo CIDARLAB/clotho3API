@@ -106,7 +106,13 @@
          * @return {Object} An ID or list of IDs of objects updated.
          */
         set: function(object) {
-            return socket.emit("set", object);
+            if (object.length == undefined) {
+                return socket.emit("set", object);
+            } else if (object.length == 1) {
+                return socket.emit("set", object[0]);
+            } else {
+                return socket.emit("set", object);
+            }
         },
 
         /** 
@@ -145,8 +151,9 @@
          * @param {Object} Clotho object specification.
          * @return {Object} The first Clotho object that matches the spec.
          */
-        queryOne: function(objectSpec) {
-            return object;
+        queryOne: function(schema, name) {
+            obj[schema] = name;
+            return socket.emit("queryOne", obj);
         },
 
         /**
