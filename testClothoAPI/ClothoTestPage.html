@@ -13,6 +13,10 @@
         <button id="connect" type="button" class="btn btn-primary btn-lg">Connect</button>
         <button id="get" type="button" class="btn btn-success btn-lg">Get</button>
         <button id="query" type="button" class="btn btn-success btn-lg">Query</button>
+        <button id="create" type="button" class="btn btn-success btn-lg">Create</button>
+        <button id="destroy" type="button" class="btn btn-success btn-lg">Destroy</button>
+        <button id="set" type="button" class="btn btn-success btn-lg">Set</button>
+        <button id="createAll" type="button" class="btn btn-success btn-lg">Create All</button>
 
         <script>
             $(document).ready(function() { 
@@ -20,14 +24,45 @@
                     alert("Connecting");
                 });
                 $("#get").click(function() {
-                    Clotho.get("Test Part 1").then(function(data) {
-                        alert(data.author);
+                    Clotho.get("My New Part").then(function(data) {
+                        alert(data.name);
                     }).done();
                 });
                 $("#query").click(function() {
                     Clotho.query("schema", "CompositePart").then(function(data) {
                         alert(data.length);
                     }).done();
+                });
+                $("#create").click(function() {
+                    Clotho.create({"name":"My New Part", "sequence":"GGGGGG"}).then(function(id) {
+                        Clotho.get(id).then(function(data) {
+                            alert(data.sequence);
+                        }).done();
+                    });
+                });
+                $("#createAll").click(function() {
+                    Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"},{"name":"My Second Part", "sequence":"AAACCC"}]).then(function(id) {
+                        alert(JSON.stringify(id));        
+                    }).done();
+                });
+                $("#destroy").click(function() {
+                    Clotho.destroy(["My New Part", "My Second Part"]);
+                });
+                $("#set").click(function() {
+                    Clotho.get("Test Part 1").then(function(data) {
+                        alert(data.name);
+                        storeID = data.id;
+                        Clotho.set({"id":storeID, "name":"Kev's Trial Part"}).then(function(data2) {
+                            Clotho.get(storeID).then(function(data3) {
+                                alert(data3.name);
+                                Clotho.set({"id":storeID, "name":"Test Part 1"}).then(function(data4) {
+                                    Clotho.get(storeID).then(function(data5) {
+                                        alert(data5.name);
+                                    }).done()
+                                });
+                            });
+                        });
+                    });
                 });
             });
         </script>
