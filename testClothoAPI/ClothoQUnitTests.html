@@ -13,19 +13,97 @@
         <script>
             $(document).ready(function() { 
                 alert("Connect and shit.");
+                
                 module("Server API Tests");
+                
                 asyncTest("GET", function() {
                     Clotho.get("Test Part 1").then(function(data) {
                         equal(data.name, "Test Part 1");
                         start();
                     }).done();
                 });
-                asyncTest("QUERY", function() {
+                
+                asyncTest("Get All", function() {
+                    Clotho.get(["Test Part 1", "Test Part 2", "Test Part 3"]).then(function(data) {
+                        equal(data.length, 3);
+                        equal(data[0].name, "Test Part 1");
+                        equal(data[1].name, "Test Part 2");
+                        equal(data[2].name, "Test Part 3");
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Query Parts", function() {
                     Clotho.query("schema", "Part").then(function(data) {
                         equal(data.length, 55);
                         start();
                     }).done();
                 });
+
+                asyncTest("Query BasicParts", function() {
+                    Clotho.query("schema","BasicPart").then(function(data) {
+                        equal(data.length, 54);
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Query CompositeParts", function() {
+                    Clotho.query("schema","CompositePart").then(function(data) {
+                        equal(data.length, 1);
+                        data = data[0];
+                        equal(data.type, "COMPOSITE");
+                        ok(data.composition[0].substring);
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Query One CompositePart", function() {
+                    Clotho.queryOne("schema","CompositePart").then(function(data) {
+                        equal(data.name, "Test Part 3");
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Create then Get", function() {
+                    obj = {"name":"My New Part", "sequence":"GGGGGG"};
+                    Clotho.create(obj).then(function(id) {
+                        Clotho.get(id).then(function(data) {
+                            equal(data.sequence, "GGGGGG");
+                            start();
+                        }).done();
+                    });
+                });
+
+                asyncTest("Create with schema, Get, then Destroy", function() {
+                    obj = {"name":"Created Part 2", "sequence":"CCCC", "schema":"BasicPart"};
+                    Clotho.create(obj).then(function(id) {
+                        Clotho.get("Created Part 2").then(function(data2) {
+                            ok(data2.hasOwnProperty("schema"));
+                            ok(!(data2.hasOwnProperty("className")));
+                            Clotho.destroy("Created Part 2");
+                            //TODO: ensure actually destroyed
+                            start();
+                        }).done();
+                    });
+                });
+
+                asyncTest("Set then Reset", function() {
+                    Clotho.get("Test Part 1").then(function(data) {
+                        partID = data.id;
+                        Clotho.set({"id":partID,"name":"Set Part"}).then(function(data2) {
+                            Clotho.get(partID).then(function(data3) {
+                                equal(data3.name, "Set Part");
+                                Clotho.set({"id":partID,"name":"Test Part 1"}).then(function(data4) {
+                                    Clotho.get(partID).then(function(data5) {
+                                        equal(data5.name, "Test Part 1");
+                                        start();
+                                    }).done();
+                                });
+                            });
+                        });
+                    });
+                });
+
             });
         </script>
         <div id="qunit"></div>
