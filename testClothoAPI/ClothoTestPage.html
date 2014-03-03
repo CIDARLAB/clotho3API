@@ -17,6 +17,7 @@
         <button id="destroy" type="button" class="btn btn-success btn-lg">Destroy</button>
         <button id="set" type="button" class="btn btn-success btn-lg">Set</button>
         <button id="createAll" type="button" class="btn btn-success btn-lg">Create All</button>
+        <button id="queryOne" type="button" class="btn btn-success btn-lg">Query One</button>
 
         <script>
             $(document).ready(function() { 
@@ -33,6 +34,11 @@
                         alert(data.length);
                     }).done();
                 });
+                $("#queryOne").click(function() {
+                    Clotho.queryOne("schema", "CompositePart").then(function(data) {
+                        alert(data.name);
+                    }).done();
+                });
                 $("#create").click(function() {
                     obj = {"name":"My New Part", "sequence":"GGGGGG"};
                     Clotho.create(obj).then(function(id) {
@@ -47,7 +53,7 @@
                     }).done();
                 });
                 $("#destroy").click(function() {
-                    Clotho.destroy(["My New Part", "My Second Part"]);
+                    Clotho.destroy("My New Part");
                 });
                 $("#set").click(function() {
                     Clotho.get("Test Part 1").then(function(data) {
