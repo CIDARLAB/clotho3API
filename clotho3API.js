@@ -152,6 +152,7 @@
          * @return {Object} The first Clotho object that matches the spec.
          */
         queryOne: function(schema, name) {
+            obj = {};
             obj[schema] = name;
             return socket.emit("queryOne", obj);
         },
