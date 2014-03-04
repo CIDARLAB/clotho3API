@@ -111,7 +111,7 @@
             } else if (object.length == 1) {
                 return socket.emit("set", object[0]);
             } else {
-                return socket.emit("set", object);
+                return socket.emit("setAll", object);
             }
         },
 
