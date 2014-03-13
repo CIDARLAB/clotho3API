@@ -23,7 +23,7 @@
                     }).done();
                 });
                 
-                asyncTest("Get All", function() {
+                asyncTest("Get All", function() {   
                     Clotho.get(["Test Part 1", "Test Part 2", "Test Part 3"]).then(function(data) {
                         equal(data.length, 3);
                         equal(data[0].name, "Test Part 1");
@@ -127,6 +127,19 @@
                     }).done();
                 });
 
+                asyncTest("Submit: Functions with Arguments", function() {
+                    Clotho.submit("clotho.run('lowercase', ['HEY'])").then(function(data) {
+                        equal(data, "hey");
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Submit: Import Nonexistent External Library", function() {
+                    Clotho.submit("load(\"yepnope.js\")").then(function(data) {
+                        equal(data, null);
+                        start();
+                    }).done();
+                });
             });
         </script>
         <div id="qunit"></div>
