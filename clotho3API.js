@@ -160,10 +160,44 @@
         /**
          * Clotho.run
          * Executes specified function with args as its input.
-         * @param {Object} Object selector indicating the function to run. Args: JSON object with key-value pairs providing the argument values to the function.
+         * @param {Object} Object selector with 2 or 3 fields: 
+         *  'Object.module' {String} indicates function module to run [OPTIONAL], 
+         *  'Object.func' {String} indicates the function to run,
+         *  'Object.input' {Object} indicates input arguments for function. 
          */
-        run: function(myFunction, args) {
-            return object;
+        run: function(object) {
+            if (object.module == undefined) {
+                return socket.emit("run", {"id":object.func, "args":object.input});
+            } else {
+                return socket.emit("run", {"id":object.module, "function":object.func, "args":object.input});
+            }
+        },
+
+        /**
+         * Clotho.submit
+         * Executes script.
+         * @param {Object}
+         */
+        submit: function(script) {
+            //TODO: Implement Submit method
+        },
+
+        /**
+         * Clotho.login
+         * Login to Clotho
+         * @param {Object} 
+         */
+        login: function(args) {
+            //TODO: Implement Log in
+        },
+
+        /**
+         * Clotho.logout
+         * Login to Clotho
+         * @param {Object} 
+         */
+        logout: function(args) {
+            //TODO: Implement Log out
         }
     };
 }(Clotho = window.Clotho || {}));
