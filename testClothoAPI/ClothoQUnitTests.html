@@ -104,6 +104,29 @@
                     });
                 });
 
+                module("Functions and Modules")
+
+                asyncTest("Run: Module Scoping", function() {
+                    Clotho.run({func:"moduleTestFunction", input:[2]}).then(function(data) {
+                        equal(data, 5);
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Run: Invoke Module Method", function() {
+                    Clotho.run({module:"testModule", func:"moduleMethod", input:[]}).then(function(data) {
+                        equal(data, 2);
+                        start();
+                    }).done();
+                });
+
+                asyncTest("Run: Use Lodash", function() {
+                    Clotho.run({func:"useLodash", input:[]}).then(function(data) {
+                        deepEqual(data, [2,3,4]);
+                        start();
+                    }).done();
+                });
+
             });
         </script>
         <div id="qunit"></div>
