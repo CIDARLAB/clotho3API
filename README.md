@@ -16,6 +16,35 @@
 ### Examples
 
 ## API
+### .create()
+> Creates new Clotho object.
+
+### .destroy()
+> Destroys specified Clotho object.
+
+### .set()
+> Sets one or multiple key-values for the specified Clotho object.
+
+### .get()
+> Gets a specified Clotho object.  
+
+### .query()
+> Queries for all Clotho objects matching the specified criteria.
+
+### .queryOne()
+> Queries for any single Clotho object matching the specified criteria.
+
+### .run()
+> Runs a specified function with the given input parameters.
+
+### .submit()
+> Runs the input script.
+
+### .login()
+> Attempts to log in with the specified *username* and *password*.
+
+### .logout()
+> Attempts to log out if a user is currently logged in.
 
 ## Tests
 
