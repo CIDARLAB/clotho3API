@@ -179,7 +179,7 @@
          * @param {Object}
          */
         submit: function(script) {
-            //TODO: Implement Submit method
+            return socket.emit("submit", script);
         },
 
         /**
