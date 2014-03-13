@@ -104,6 +104,30 @@
                     });
                 });
 
+                asyncTest("Log In - Log Out", function() {
+                    Clotho.login("testuser", "password").then(function(data) {
+                        equal(data, true);
+                        Clotho.submit("var persistVar = 13").then(function(data) {
+                            Clotho.submit("persistVar").then(function(data) {
+                                equal(data, 13);
+                                Clotho.logout().then(function(data) {
+                                    equal(data, true);
+                                    Clotho.submit("persistVar").then(function(data) {
+                                        notEqual(data, 13, "Data not accessible on logout");
+                                        Clotho.login("testuser", "password").then(function(data) {
+                                            equal(data, true);
+                                            Clotho.submit("persistVar").then(function(data) {
+                                                equal(data, 13, "Data accessible upon subsequent login");
+                                                start();
+                                            }).done();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+
                 module("Functions and Modules")
 
                 asyncTest("Run: Module Scoping", function() {
