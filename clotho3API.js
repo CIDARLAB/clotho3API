@@ -187,8 +187,8 @@
          * Login to Clotho
          * @param {Object} 
          */
-        login: function(args) {
-            //TODO: Implement Log in
+        login: function(name, pass) {
+            return socket.emit("login", {"username":name, "password":pass});
         },
 
         /**
@@ -196,8 +196,8 @@
          * Login to Clotho
          * @param {Object} 
          */
-        logout: function(args) {
-            //TODO: Implement Log out
+        logout: function() {
+            return socket.emit("logout", "");
         }
     };
 }(Clotho = window.Clotho || {}));
