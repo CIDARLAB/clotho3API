@@ -6,8 +6,9 @@
 ## Getting Started
 
 ### Installation
-* **Requirements:** Kristopher Kowal's [Q Promise Library](https://github.com/kriskowal/q) for asynchronous server communication. *Simplest Approach: Copy and paste the following source script into your HTML's head.*
-    - `<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>`
+* **Requirements:** Kristopher Kowal's [Q Promise Library](https://github.com/kriskowal/q) for asynchronous server communication.<br />
+    *Simplest Approach: Copy and paste the following source script into your HTML's head.*
+    `<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>`
 * **Download clotho3api.js:** Blah blah blah 
 
 ### Resources
@@ -50,6 +51,7 @@
 ### Examples
 
 ## Tests
+TODO: Add a link to the Q test suite HTML (use rawgithub or htmlpreview)
 
 ## Contact
 
