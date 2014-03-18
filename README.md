@@ -1,19 +1,20 @@
-# Clotho 3.0
+# Clotho 3.0 
+![](http://cidarlab.org/wp-content/uploads/2013/08/research-clotho.png)
 
 ## Purpose
 
 ## Getting Started
 
 ### Installation
-* **Requirements:** Clotho 3.0 leverages Kristopher Kowal's [Q Promise Library](https://github.com/kriskowal/q) for seamless asynchronous server communication. *Simplest Approach: Copy and paste the following source script into your HTML's head.*
+* **Requirements:** Kristopher Kowal's [Q Promise Library](https://github.com/kriskowal/q) for asynchronous server communication. *Simplest Approach: Copy and paste the following source script into your HTML's head.*
     - `<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.min.js"></script>`
 * **Download clotho3api.js:** Blah blah blah 
 
 ### Resources
-
-### Tutorial
-
-### Examples
+* [Q Promise Reference](https://github.com/kriskowal/q/wiki/API-Reference)
+* [Official Clotho Website](http://www.clothocad.org/)
+* [About Clotho](http://cidarlab.org/clotho/)
+* Phoenix front-end for live examples?
 
 ## API
 ### .create()
@@ -46,6 +47,10 @@
 ### .logout()
 > Attempts to log out if a user is currently logged in.
 
+### Examples
+
 ## Tests
 
 ## Contact
+
+![](http://cidarlab.org/wp-content/uploads/2013/08/logo-adjusted.png)
