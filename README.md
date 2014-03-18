@@ -1,4 +1,5 @@
-# Clotho 3.0   <img style="float: right" src="http://cidarlab.org/wp-content/uploads/2013/08/research-clotho.png" />
+# Clotho 3.0   
+<img style="float: right" src="http://cidarlab.org/wp-content/uploads/2013/08/research-clotho.png" />
 <!-- ![](http://cidarlab.org/wp-content/uploads/2013/08/research-clotho.png) -->
 
 ## Purpose
