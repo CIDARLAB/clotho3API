@@ -2,6 +2,7 @@
 <!-- ![](http://cidarlab.org/wp-content/uploads/2013/08/research-clotho.png) -->
 
 ## Purpose
+To provide an accessible and robust API for writing client-side code to leverage the powerful Clotho back-end functionality.
 
 ## Getting Started
 
@@ -117,10 +118,79 @@
 > **Returns:** True if the connection was previously bound to a user (i.e. a user was logged in) and false if no one is logged in.<br/>
 
 ## Examples
+All examples below include the use of 'q' promises in order to emphasize the requisite use of the q.js library for asynchronous communication with the server.
+
+### .create()
+As defined above *create* returns the ID(s) of the successfully created object(s). Therefore, as can be seen below, we must call *create* then *get* in order to access the new object's 'sequence' field.
+
+    obj = {"name":"My Part", "sequence":"ACTGACTG"};
+    Clotho.create(obj).then(function(id) {
+        Clotho.get(id).then(function(data) {
+            MyPartSeq = data.sequence;
+        });
+    });
+
+'MyPartSeq' is assigned the value of the 'sequence' field of the Clotho object after it has been successfully created.
+
+    MyPartSeq
+    >> ACTGACTG
+
+### .destroy()
+Suppose the part named "My Part" created above exists in our database. Now calling *destroy* on this part will delete it from the database.
+
+    Clotho.destroy("My Part");
+
+As a matter of preference, you may wish to use the object ID as the selector. First you must *get* the ID of the part you wish to remove (which returns the specified object), then call *destroy* using the returned object's ID field as the selector. 
+
+    Clotho.get("My Part").then(function(data) {
+        objectID = data.id;
+        Clotho.destroy(objectID);
+    });
+
+### .set()
+Set has multiple built-in functions described in the function definition above. The following example covers all of these possibilities.
+
+First, suppose an object whose object ID field is '1111' *does not exist* in the database. Calling set using that ID as a selector will cause Clotho to construct a new object with this ID by way of *create*.
+
+    objSpec = {"id":1111,"name":"New Part","sequence":"AGATAGAT"};
+    Clotho.set(objSpec);
+
+Clotho, in this case, does not recognize an existing part with this object ID and will construct a new object in the database. 
+
+    Clotho.get("New Part").then(function(data) {
+        data.name
+        data.id
+        data.sequence
+    });
+
+    >> New Part
+    >> 1111
+    >> AGATAGAT
+
+Now that our part 'New Part' exists, calling *set* will cause any existing fields to be updated with the specified values and any new fields to be added. Again, any fields currently defined in the existing object but missing from the object spec will remain unchanged.
+
+    objSpec = {"id":1111,"sequence":"ATCTATCT"};
+    Clotho.set(objSpec);
+
+### .get()
+
+### .query()
+
+### .queryOne()
+
+### .run()
+
+### .submit()
+
+### .login()
+
+### .logout()
 
 ## Tests
-TODO: Add a link to the Q test suite HTML (use rawgithub or htmlpreview)? Or not.
+Refer to the clothoAPI/tests/ directory for an extensive suite of QUnit tests.
 
 ## Contact
+**Kevin LeShane:** *leshane@bu.edu* <br/>
+**Stephanie Paige:** *spaige@bu.edu*
 
 ![](http://cidarlab.org/wp-content/uploads/2013/08/logo-adjusted.png)
