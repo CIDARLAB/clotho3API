@@ -68,7 +68,7 @@
          * Clotho.create
          * Creates specified object(s) and associated UUIDs in the order they are found in the list (if more than one).
          * @param {Object} A list of one or more JSON objects describing an instance(s) of Clotho schema.
-         * @return {Object} A list of created objects' IDs. Ex: Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"},{"name":"My Second Part", "sequence":"AAACCC"}])
+         * @return {Object} A list of created objects' IDs. Ex: Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"},{"name":"Another Part", "sequence":"AAACCC"}])
          */
         create: function(object) {
             /** Three cases below (in order):
@@ -88,7 +88,7 @@
         /**
          * Clotho.destroy
          * Destroys object(s) as defined by the input.
-         * @param {Object} One or more JSON object(s) describing an instance(s) of Clotho schema.
+         * @param {Object selector} A string or list of strings describing a particular Clotho object.
          */
         destroy: function(name) {
             if (typeof name == "string") {
@@ -104,7 +104,7 @@
          * Sets the fields present in the specificiation to the values defined by the spec.
          * @param id: ID of the object to be updated, key: field
          * @return {Object} An ID or list of IDs of objects updated.
-         */
+         */f
         set: function(object) {
             if (object.length == undefined) {
                 return socket.emit("set", object);
