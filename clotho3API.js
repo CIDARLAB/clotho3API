@@ -104,7 +104,7 @@
          * Sets the fields present in the specificiation to the values defined by the spec.
          * @param id: ID of the object to be updated, key: field
          * @return {Object} An ID or list of IDs of objects updated.
-         */f
+         */
         set: function(object) {
             if (object.length == undefined) {
                 return socket.emit("set", object);
@@ -167,9 +167,9 @@
          */
         run: function(object) {
             if (object.module == undefined) {
-                return socket.emit("run", {"id":object.func, "args":object.input});
+                return socket.emit("run", {"id":object.function, "args":object.args});
             } else {
-                return socket.emit("run", {"id":object.module, "function":object.func, "args":object.input});
+                return socket.emit("run", {"id":object.module, "function":object.function, "args":object.args});
             }
         },
 
