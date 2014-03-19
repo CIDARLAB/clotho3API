@@ -41,11 +41,15 @@
                 });
                 $("#create").click(function() {
                     obj = {"name":"My New Part", "sequence":"GGGGGG"};
-                    Clotho.create(obj).then(function(id) {
-                        Clotho.get(id).then(function(data) {
-                            alert(data.sequence);
-                        }).done();
-                    });
+                    Clotho.create(obj);
+                    Clotho.get("My New Part").then(function(data) {
+                        alert(data.sequence);
+                    }).done();
+                    // Clotho.create(obj).then(function(id) {
+                    //     Clotho.get(id).then(function(data) {
+                    //         alert(data.sequence);
+                    //     }).done();
+                    // });
                 });
                 $("#createAll").click(function() {
                     Clotho.create([{"name":"My New Part", "sequence":"GGGGGG"},{"name":"My Second Part", "sequence":"AAACCC"}]).then(function(id) {
