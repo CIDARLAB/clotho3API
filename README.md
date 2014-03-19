@@ -76,7 +76,7 @@
 > **Returns:** The *first* object matching the fields provided in the spec.
 
 ### .run()
-> Runs a specified function with the given input parameters. <br/>
+> Executes the specified function with the given input parameters. <br/>
 > 
 > **Input:** (JSON object) An object containing the following two field-value pairs <br/>
 > > 'function': An object selector for the desired function to be executed. <br/>
@@ -91,7 +91,7 @@
 > >     3. There exist ambiguously specified arguments.
 
 ### .submit()
-> Runs the input script. <br/>
+> Executes the input script. <br/>
 > 
 > **Input:** (String) The script to be executed as a String. <br/>
 > **Returns:** The value returned from executing the specified script on the server-side scripting environment. <br/>
