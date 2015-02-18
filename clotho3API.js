@@ -139,22 +139,26 @@
          * @param {Object} Clotho object specification.
          * @return {Object} All objects that match the spec.
          */
-        query: function(schema, name) {
+        /*query: function(schema, name) {
             var obj = {};
             obj[schema] = name;
             return socket.emit("query", obj);
+        },*/
+        query: function(object) {
+            //var obj = {};
+            //obj[schema] = name;
+            return socket.emit("query", object);
         },
-
         /**
          * Clotho.queryAll
          * Seeks Clotho object instances that match the object specification.
          * @param {Object} Clotho object specification.
          * @return {Object} The first Clotho object that matches the spec.
          */
-        queryOne: function(schema, name) {
-            obj = {};
-            obj[schema] = name;
-            return socket.emit("queryOne", obj);
+        queryOne: function(object) {
+            //obj = {};
+            //obj[schema] = name;
+            return socket.emit("queryOne", object);
         },
 
         /**
