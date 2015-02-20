@@ -140,7 +140,7 @@
          * @return {Object} An ID or list of IDs of objects updated.
          */
         set: function(object, options) {
-            if (typeof object == "string") {
+            if (object.length == undefined) {
                 return socket.emit("set", object, options);
             } else {
                 return socket.emit("setAll", object, options);
